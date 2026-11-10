@@ -30,25 +30,33 @@ class Simulation:
 
 
     def _apply_control(self):
+        dpos = 2.0
         hover = 2.4525
+        p = 5.0
+        d = 2.0
         pos = self.data.qpos[2]
         vel = self.data.qvel[2] 
 
-        if pos < 1.0:
-            if vel > 1.5:
-                power = hover
-            else:
-                power = 3.0  
-        else:
-            if vel > 0.1:
-                power = 1.5
-            elif vel < -0.1:
-                power = 3.0
-            else:
-                power = hover  
+        p_error = dpos - pos
+        d_error = 0.0 - vel
+
+        power_correction = p * p_error + d * d_error
+
+        # if pos < 1.0:
+        #     if vel > 1.5:
+        #         power = hover
+        #     else:
+        #         power = 3.0  
+        # else:
+        #     if vel > 0.1:  
+        #         power = 1.5
+        #     elif vel < -0.1:
+        #         power = 3.0
+        #     else:
+        #         power = hover  
 
         for i in range(4):
-            self.data.ctrl[i] = power
+            self.data.ctrl[i] = hover + power_correction
 
 
     def _read_sensors(self):
